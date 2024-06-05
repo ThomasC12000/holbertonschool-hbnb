@@ -1,6 +1,6 @@
-import BaseClass
+from base_class import BaseClass
 from users import Users
 
-new_users = Users("Hadrien", "TAYAC", "test@gmail.com", "123456")
-new_users.create_user()
-print(new_users.get_user("0"))
+new_users = Users("Lucas", "FEEDER", "feed@gmail.com", "feed4ever")
+new_users.to_json()
+new_users.save_to_file("users.json")

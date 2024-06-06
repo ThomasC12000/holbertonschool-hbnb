@@ -9,10 +9,8 @@ class DataManager(IPersistenceManager):
 
     def save(self, entity):
         entity_type = type(entity).__name__
-        if entity_type not in self.storage:
-            self.storage[entity_type] = {}
         entity_id = entity["id"]
-        self.storage[entity_type][entity_id] = entity
+        self.storage[entity_type][entity_id].save()
 
     def get(self, entity_id, entity_type):
         if entity_type in self.storage and entity_id in self.storage[entity_type]:
@@ -22,7 +20,7 @@ class DataManager(IPersistenceManager):
     def update(self, entity):
         entity_type = type(entity).__name__
         entity_id = entity["id"]
-        self.storage[entity_type][entity_id].update
+        self.storage[entity_type][entity_id].update()
 
     def delete(self, entity_id, entity_type):
         if entity_type in self.storage and entity_id in self.storage[entity_type]:

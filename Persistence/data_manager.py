@@ -1,11 +1,11 @@
 from Model.base_class import BaseClass
-from Model.places import Places
+from Model.classes import Place
 from persistence_manager import IPersistenceManager
 from typing import Dict
 
 class DataManager(IPersistenceManager):
     def __init__(self):
-            self.storage: Dict[str, Dict[str, BaseClass | Places]] = {}
+            self.storage: Dict[str, Dict[str, BaseClass | Place]] = {}
 
     def save(self, entity):
         entity_type = type(entity).__name__

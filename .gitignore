@@ -9,5 +9,4 @@ __pycache__
     - .travis.yml
     - .gitignore
     - .coveragerc
-tests.py
 test.*

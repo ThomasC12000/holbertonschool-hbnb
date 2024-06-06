@@ -21,11 +21,18 @@ class BaseClass:
             all_data.append(data)
         self._save_all(all_data)
 
-    def delete(self):
+    def delete(self, id):
         """Delete the current instance from the file."""
         all_data = self._load_all()
-        all_data = [item for item in all_data if item['id'] != self.id]
+        all_data = [item for item in all_data if item['id'] != id]
         self._save_all(all_data)
+
+    def update(self, **kwargs):
+        """Update the attributes of the current instance."""
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        self.updated_at = datetime.now().isoformat()
+        self.save()
 
     @classmethod
     def get_by_id(cls, id):

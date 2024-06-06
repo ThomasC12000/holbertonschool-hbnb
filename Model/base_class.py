@@ -2,6 +2,7 @@ import json
 import os
 from uuid import uuid4
 from datetime import datetime
+"""Parent class with shared methods"""
 
 class BaseClass:
     def __init__(self, id=None, created_at=None, updated_at=None):

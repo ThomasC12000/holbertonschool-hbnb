@@ -1,0 +1,13 @@
+__pycache__
+    - .gitignore
+    - README.md
+    - requirements.txt
+    - setup.py
+    - test.py
+    - test_requirements.txt
+    - tox.ini
+    - .travis.yml
+    - .gitignore
+    - .coveragerc
+tests.py
+test.*

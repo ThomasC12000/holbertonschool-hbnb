@@ -1,37 +1,58 @@
-from datetime import datetime
 import json
+import os
 from uuid import uuid4
-"""Base class for all classes in the project"""
-
+from datetime import datetime
+"""Parent class with shared methods"""
 
 class BaseClass:
-    def __init__(self, created_at, updated_at, id):
-        self.id = id
-        self.created_at = created_at
-        self.updated_at = updated_at
+    def __init__(self, id=None, created_at=None, updated_at=None):
+        self.id = id or str(uuid4())
+        self.created_at = created_at or datetime.now().isoformat()
+        self.updated_at = updated_at or datetime.now().isoformat()
 
     def save(self):
         self.updated_at = datetime.now()
-        return str(self.updated_at)
+        return self.updated_at
 
     def update(self):
         self.updated_at = datetime.now()
-        return str(self.updated_at)
+        return self.updated_at
 
-    def to_json(self):
-        """
-        Return a JSON representation of the object
-        after converting it to a dictionary.
-        """
-        dict_obj = self.__dict__.copy()
-        dict_obj['created_at'] = self.created_at.isoformat()
-        dict_obj['updated_at'] = self.updated_at.isoformat()
-        dict_obj['id'] = str(self.id)
-        return json.dumps(dict_obj)
+    def update(self):
+        self.updated_at = datetime.now()
+        return self.updated_at
+    
+    def delete(self):
+        """Delete the current instance from the file."""
+        all_data = self._load_all()
+        all_data = [item for item in all_data if item['id'] != self.id]
+        self._save_all(all_data)
 
-    def save_to_file(self, filename):
-        """Save the JSON representation of the object to a file"""
-        with open(filename, 'a') as file:
-            file.write(self.to_json())
-            if file.closed:
-                return ("Object saved to file")
+    @classmethod
+    def get_by_id(cls, id):
+        """Get an instance by its ID."""
+        all_data = cls._load_all()
+        data = next((item for item in all_data if item['id'] == id), None)
+        return cls(**data) if data else None
+
+    @classmethod
+    def get_all(cls):
+        """Get all instances of the model."""
+        all_data = cls._load_all()
+        return [cls(**item) for item in all_data]
+
+    @classmethod
+    def _load_all(cls):
+        """Load all data from the file."""
+        filename = f"{cls.__name__.lower()}.json"
+        if os.path.exists(filename):
+            with open(filename, 'r') as f:
+                return json.load(f)
+        return []
+
+    @classmethod
+    def _save_all(cls, data):
+        """Save all data to the file."""
+        filename = f"{cls.__name__.lower()}.json"
+        with open(filename, 'w') as f:
+            json.dump(data, f, indent=4)

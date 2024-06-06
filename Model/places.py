@@ -11,7 +11,7 @@ class Places(BaseClass):
 
     def create_user(self):
         user = {
-            'id': uuid4(), # IT'S A STRING
+            'id': str(uuid4()), # IT'S A STRING
             'name': self.name,
             'email': self.email,
             'password': self.password,

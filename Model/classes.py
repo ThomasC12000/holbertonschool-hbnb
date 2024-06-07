@@ -1,9 +1,12 @@
 from base_class import BaseClass
 
-
 class User(BaseClass):
     def __init__(self, email, password, first_name='', last_name='', **kwargs):
         super().__init__(**kwargs)
+        assert email, "User: email missing"
+        assert password, "User: password missing"
+        assert first_name, "User: first_name missing"
+        assert last_name, "User: last_name missing"
         self.email = email
         self.password = password
         self.first_name = first_name

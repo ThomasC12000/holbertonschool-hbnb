@@ -16,11 +16,3 @@ class IPersistenceManager(ABC):
     @abstractmethod
     def delete(self, entity_id, entity_type):
         pass
-
-class Datamanager(IPersistenceManager):
-    def __init__(self):
-            self.storage = {}
-    def save(self, entity):
-        entity_type = type(entity).__name__
-        
-    

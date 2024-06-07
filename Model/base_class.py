@@ -21,7 +21,7 @@ class BaseClass:
             all_data.append(data)
         self._save_all(all_data)
 
-    def delete(self, id):
+    def delete(self):
         """Delete the current instance from the file."""
         all_data = self._load_all()
         all_data = [item for item in all_data if item['id'] != id]

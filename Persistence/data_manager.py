@@ -24,4 +24,4 @@ class DataManager(IPersistenceManager):
 
     def delete(self, entity_id, entity_type):
         if entity_type in self.storage and entity_id in self.storage[entity_type]:
-             del self.storage[entity_type][entity_id]
+            del self.storage[entity_type][entity_id]

@@ -2,7 +2,7 @@ from flask import Flask
 from flask import jsonify
 from flask import request, abort
 from Persistence.data_manager import data_manager
-from Model.users import Users
+from Model.users import User
 import json
 
 
@@ -11,7 +11,7 @@ users = {}
 
 app = Flask(__name__)
 
-users_manager = Users()
+users_manager = User()
 
 @app.route("/users", methods=["POST"])
 def create_user():
@@ -23,7 +23,7 @@ def create_user():
 
     entity = data_manager.create("User", **data)
     # Respond with the newly created user
-    return jsonify({'id': user_id}), 201  # HTTP status 201 for Created
+    return jsonify({'id': User.id}), 201  # HTTP status 201 for Created
 
 
 @app.route("/users", methods=["GET"])

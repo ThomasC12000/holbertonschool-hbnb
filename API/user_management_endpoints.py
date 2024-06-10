@@ -31,6 +31,6 @@ def get_users():
     if all_users is None:
         abort(404, description="No users found")
     #ici
-    return jsonify({ user.__dict__ for user in all_users })
+    return jsonify({ user.to_dict() for user in all_users })
 
 app.run()

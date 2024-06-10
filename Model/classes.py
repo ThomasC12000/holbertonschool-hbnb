@@ -1,4 +1,4 @@
-from base_class import BaseClass
+from Model.base_class import BaseClass
 """Classes for the different models in the application."""
 
 class User(BaseClass):

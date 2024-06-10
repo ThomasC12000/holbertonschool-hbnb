@@ -62,3 +62,7 @@ class BaseClass:
         filename = f"{cls.__name__.lower()}.json"
         with open(filename, 'w') as f:
             json.dump(data, f, indent=4)
+
+    def to_dict(self):
+        """Return a dictionary representation of the instance."""
+        return self.__dict__

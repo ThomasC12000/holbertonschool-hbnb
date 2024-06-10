@@ -15,7 +15,7 @@ app = Flask(__name__)
 def create_user():
     data = request.get_json()
     if not data or "email" not in data or "first_name" not in data or "last_name" not in data:
-        abort(400, description="Missing required fields: email, first_name, last_name")
+        abort(400, description="Missing required fields: email, first_name, last_name, password")
     if not isinstance(data["email"], str) or "@" not in data["email"]:
         abort(400, description="Invalid email format")
     

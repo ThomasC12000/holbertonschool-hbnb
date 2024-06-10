@@ -1,12 +1,13 @@
 import unittest
 import json
-from app import app, users
+from tests.user_management_endpoints import app, users
+from Model import BaseClass
 
 class UserEndpointTestCase(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.app.testing = True
-        users.clear()  # Assurez-vous que l'état initial est vide
+        users.clear()  # Clear the users list before each test
 
     def test_create_user(self):
         response = self.app.post('/users/', json={"email": "test@example.com", "first_name": "John", "last_name": "Doe"})
@@ -24,36 +25,36 @@ class UserEndpointTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 409)
 
     def test_get_user(self):
-        # Créez un utilisateur d'abord
+        # Create a user first
         create_response = self.app.post('/users/', json={"email": "test@example.com", "first_name": "John", "last_name": "Doe"})
         self.assertEqual(create_response.status_code, 201)
         user_id = json.loads(create_response.data)['id']
 
-        # Récupérez l'utilisateur créé
+        # Get created user
         response = self.app.get(f'/users/{user_id}')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         self.assertEqual(data['email'], "test@example.com")
 
     def test_update_user(self):
-        # Créez un utilisateur d'abord
+        # Create a user first
         create_response = self.app.post('/users/', json={"email": "test@example.com", "first_name": "John", "last_name": "Doe"})
         self.assertEqual(create_response.status_code, 201)
         user_id = json.loads(create_response.data)['id']
 
-        # Mettez à jour l'utilisateur créé
+        # Update created user
         response = self.app.put(f'/users/{user_id}', json={"email": "new@example.com", "first_name": "John", "last_name": "Doe"})
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         self.assertEqual(data['email'], "new@example.com")
 
     def test_delete_user(self):
-        # Créez un utilisateur d'abord
+        # Create a user first
         create_response = self.app.post('/users/', json={"email": "test@example.com", "first_name": "John", "last_name": "Doe"})
         self.assertEqual(create_response.status_code, 201)
         user_id = json.loads(create_response.data)['id']
 
-        # Supprimez l'utilisateur créé
+        # Delete created user
         response = self.app.delete(f'/users/{user_id}')
         self.assertEqual(response.status_code, 204)
 

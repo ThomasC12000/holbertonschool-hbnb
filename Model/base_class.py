@@ -1,7 +1,7 @@
-import json
-import os
 from uuid import uuid4
 from datetime import datetime
+import json
+import os
 """Parent class with shared methods"""
 
 class BaseClass:
@@ -34,31 +34,4 @@ class BaseClass:
         self.updated_at = datetime.now().isoformat()
         self.save()
 
-    @classmethod
-    def get_by_id(cls, id):
-        """Get an instance by its ID."""
-        all_data = cls._load_all()
-        data = next((item for item in all_data if item['id'] == id), None)
-        return cls(**data) if data else None
 
-    @classmethod
-    def get_all(cls):
-        """Get all instances of the model."""
-        all_data = cls._load_all()
-        return [cls(**item) for item in all_data]
-
-    @classmethod
-    def _load_all(cls):
-        """Load all data from the file."""
-        filename = f"{cls.__name__.lower()}.json"
-        if os.path.exists(filename):
-            with open(filename, 'r') as f:
-                return json.load(f)
-        return []
-
-    @classmethod
-    def _save_all(cls, data):
-        """Save all data to the file."""
-        filename = f"{cls.__name__.lower()}.json"
-        with open(filename, 'w') as f:
-            json.dump(data, f, indent=4)

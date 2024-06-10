@@ -1,4 +1,5 @@
 from base_class import BaseClass
+"""Classes for the different models in the application."""
 
 class User(BaseClass):
     def __init__(self, email, password, first_name='', last_name='', **kwargs):

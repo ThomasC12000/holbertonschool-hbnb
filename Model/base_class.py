@@ -34,6 +34,9 @@ class BaseClass:
         self.updated_at = datetime.now().isoformat()
         self.save()
 
+    def to_dict(self):
+        pass
+
     @classmethod
     def get_by_id(cls, id):
         """Get an instance by its ID."""
@@ -48,7 +51,7 @@ class BaseClass:
         return [cls(**item) for item in all_data]
 
     @classmethod
-    def _load_all(cls):
+    def load_all(cls):
         """Load all data from the file."""
         filename = f"{cls.__name__.lower()}.json"
         if os.path.exists(filename):
@@ -57,7 +60,7 @@ class BaseClass:
         return []
 
     @classmethod
-    def _save_all(cls, data):
+    def save_all(cls, data):
         """Save all data to the file."""
         filename = f"{cls.__name__.lower()}.json"
         with open(filename, 'w') as f:

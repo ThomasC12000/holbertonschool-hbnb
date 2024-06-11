@@ -18,6 +18,7 @@ def create_user():
         abort(400, description="Invalid email format")
 
     entity: User = data_manager.create("User", **data)
+    data['id'] = entity.id
     save_data(data)
     # Respond with the newly created user
     return jsonify({'id': entity.id}), 201  # HTTP status 201 for Created

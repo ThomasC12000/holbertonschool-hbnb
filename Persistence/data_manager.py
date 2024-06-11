@@ -1,7 +1,6 @@
 from Model.base_class import BaseClass
 from Model.classes import Place, User, Review, Amenity, City, Country
 from Persistence.persistence_manager import IPersistenceManager
-from typing import Dict
 import json
 
 classes = {

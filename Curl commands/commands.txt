@@ -1,3 +1,5 @@
+---------------------------------------------USERS-----------------------------------------------
+
 CREATE A USER
 ----------
 
@@ -24,3 +26,21 @@ UPDATE A USER
 
 curl -X PUT -H "Content-Type: application/json" -d '{"email": "feeder@gmail.com", "first_name":
 "lucas", "last_name": "feeder", "password": "feederdu12"}' http://127.0.0.1:5000/users/<user_id>
+
+---------------------------------------------PLACES-----------------------------------------------
+
+CREATE A PLACE
+--------------
+
+curl -X POST -H "Content-Type: application/json" -d '{"name":"myplace", "location":"dtc"}'
+http://127.0.0.1:5000/places
+
+GET A PLACE BY ID
+-----------------
+
+curl -X GET http://127.0.0.1:5000/places/<user_id>
+
+GET ALL PLACES
+--------------
+
+curl -X GET http://127.0.0.1:5000/places

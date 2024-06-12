@@ -1,6 +1,6 @@
 import unittest
 import json
-from tests.user_management_endpoints import app, users
+from API.user_management_endpoints import app, users
 from Model import BaseClass
 
 class UserEndpointTestCase(unittest.TestCase):

@@ -3,6 +3,7 @@ from flask import jsonify
 from flask import request, abort
 from Persistence.data_manager import data_manager
 from Model.classes import Place
+from API.endpoints_methods import save_data, load_data, email_exists
 
 places = {}
 
@@ -14,8 +15,8 @@ def create_place():
     data = request.get_json()
     if not data or "name" not in data or "city_id" not in data or "user_id" not in data:
         abort(400, description="Missing required fields: name, city_id, user_id")
-    if not isinstance(data["name"], str) or not isinstance(data["city_id"], str) or
-        not isinstance(data["user_id"], str):
+    if not isinstance(data["name"], str) or not isinstance(data["city_id"], str) or\
+    not isinstance(data["user_id"], str):
         abort(400, description="Invalid input format")
     if not data_manager.exists(data["city_id"], "City"):
         abort(404, description="City not found")
@@ -29,4 +30,3 @@ def create_place():
     
     return jsonify({'id': entity.id}), 201  # HTTP status 201 for Created
 
-        

@@ -77,7 +77,7 @@ def get_users():
     return jsonify(load_data("Persistence/users.json"))
 
 @app.route("/users/<user_id>", methods=["GET"])
-def get_user_by_id():
+def get_user_by_id(user_id):
     user_id = request.view_args.get("user_id")
     user = data_manager.get_by_id("User", user_id)
     if user is None:

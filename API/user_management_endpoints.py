@@ -40,8 +40,8 @@ def save_data(data):
         existing_data = []
 
     # Add the new data to the existing data
-    existing_data.append(data)
-    existing_data.append(data)
+    if existing_data != data:
+        existing_data.append(data)
 
     # Write the updated data to the file
     with open(file_path, 'w') as f:

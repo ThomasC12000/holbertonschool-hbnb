@@ -17,6 +17,8 @@ def create_user():
         abort(400, description="Missing required fields: email, first_name, last_name, password")
     if not isinstance(data["email"], str) or "@" not in data["email"]:
         abort(400, description="Invalid email format")
+    if email_exists(data["email"]):
+        abort(409, description="A user with this email already exists")
 
     entity: User = data_manager.create("User", **data)
     data['id'] = entity.id
@@ -44,6 +46,20 @@ def save_data(data):
     with open(file_path, 'w') as f:
         json.dump(existing_data, f)
 
+def email_exists(email):
+    file_path = "Persistence/users.json"
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            try:
+                existing_users = json.load(f)
+            except json.JSONDecodeError:
+                existing_users = []
+        
+        for user in existing_users:
+            if user.get("email") == email:
+                return True
+    return False
+
 def load_data(filename=None):
     try:
         with open(filename, 'r') as f:
@@ -62,11 +78,11 @@ def get_users():
 
 @app.route("/users/<user_id>", methods=["GET"])
 def get_user_by_id():
-    data = request.get_json
-    entity: User = data_manager.get("User", **data)
-    data["id"] = entity.id
-    if entity.id is None:
-        abort(400, description="Missing required field: id")
+    user_id = request.view_args.get("user_id")
+    user = data_manager.get_by_id("User", user_id)
+    if user is None:
+        abort(404, description="No user found with this id")
+    return jsonify(user)
     
 
 app.run()

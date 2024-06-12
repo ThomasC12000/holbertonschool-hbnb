@@ -2,4 +2,6 @@ import Model
 import API
 
 def main():
-    pass
+    API.app.run()
+
+main()

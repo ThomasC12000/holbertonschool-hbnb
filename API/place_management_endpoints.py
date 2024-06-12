@@ -3,12 +3,9 @@ from flask import jsonify
 from flask import request, abort
 from Persistence.data_manager import data_manager
 from Model.classes import Place
-from API.endpoints_methods import save_data, load_data, email_exists
+from API.endpoints_methods import save_data, load_data, email_exists, app
 
 places = {}
-
-app = Flask(__name__)
-
 
 @app.route("/places", methods=["POST"])
 def create_place():

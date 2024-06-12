@@ -1,1 +1,2 @@
+import API.amenity_management_endpoints
 from API.user_management_endpoints import app

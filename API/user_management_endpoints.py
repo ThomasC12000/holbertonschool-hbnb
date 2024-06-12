@@ -4,6 +4,7 @@ from flask import request, abort
 from Persistence.data_manager import data_manager
 from Model.classes import User
 import json
+import os
 
 users = {}
 
@@ -24,8 +25,24 @@ def create_user():
     return jsonify({'id': entity.id}), 201  # HTTP status 201 for Created
 
 def save_data(data):
-    with open("Persistence/users.json", 'a') as f:
-        json.dump(data, f)
+    file_path = "Persistence/users.json"
+    
+    # Lire les données existantes si le fichier existe
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            try:
+                existing_data = json.load(f)
+            except json.JSONDecodeError:
+                existing_data = []
+    else:
+        existing_data = []
+    
+    # Ajouter les nouvelles données aux données existantes
+    existing_data.append(data)
+    
+    # Écrire les données mises à jour dans le fichier
+    with open(file_path, 'w') as f:
+        json.dump(existing_data, f)
 
 def load_data(filename=None):
     try:
@@ -42,5 +59,14 @@ def get_users():
         abort(404, description="No users found")
 
     return jsonify(load_data("Persistence/users.json"))
+
+@app.route("/users/<user_id>", methods=["GET"])
+def get_user_by_id():
+    data = request.get_json
+    entity: User = data_manager.get("User", **data)
+    data["id"] = entity.id
+    if entity.id is None:
+        abort(400, description="Missing required field: id")
+    
 
 app.run()

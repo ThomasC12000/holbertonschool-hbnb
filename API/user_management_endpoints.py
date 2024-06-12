@@ -24,7 +24,7 @@ def create_user():
     return jsonify({'id': entity.id}), 201  # HTTP status 201 for Created
 
 def save_data(data):
-    with open("Persistence/users.json", 'w') as f:
+    with open("Persistence/users.json", 'a') as f:
         json.dump(data, f)
 
 def load_data(filename=None):

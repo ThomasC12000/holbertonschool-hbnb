@@ -69,6 +69,14 @@ def load_data(filename=None):
         print("je suis dans l'except")
         return {}
 
+@app.route("/users", methods=["GET"])
+def get_users():
+    all_users = data_manager.get_by_class("User")
+    if all_users is None:
+        abort(404, description="No users found")
+
+    return jsonify(load_data("Persistence/users.json"))
+
 @app.route("/users/<user_id>", methods=["GET"])
 def get_user_by_id(user_id):
     all_users = load_data("Persistence/users.json")
@@ -77,13 +85,16 @@ def get_user_by_id(user_id):
             return user
     return None
 
-@app.route("/users", methods=["GET"])
-def get_users():
-    all_users = data_manager.get_by_class("User")
-    if all_users is None:
-        abort(404, description="No users found")
-
-    return jsonify(load_data("Persistence/users.json"))
+@app.route("/users/<user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    all_users = load_data("Persistence/users.json")
+    for user in all_users:
+        if user["id"] == user_id:
+            all_users.remove(user)
+            with open("Persistence/users.json", 'w') as f:
+                json.dump(all_users, f)
+            return jsonify(user)
+    return None
 
 
 app.run()

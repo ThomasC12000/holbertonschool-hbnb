@@ -27,10 +27,18 @@ def create_user():
 @app.route("/users", methods=["GET"])
 def get_users():
     all_users = data_manager.get_by_class("User")
-    print(all_users)
+    for user in all_users:
+        print(user, type(user))
     if all_users is None:
         abort(404, description="No users found")
-    #ici
-    return jsonify({ user.to_dict() for user in all_users })
+    return jsonify([user.to_dict() for user in all_users.items()]), 200
 
+@app.route("/users/<user_id>", methods=["GET"])
+def get_user(user_id):
+    try:
+        user = data_manager.get("User")
+        return jsonify(user.to_dict()), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+    
 app.run()

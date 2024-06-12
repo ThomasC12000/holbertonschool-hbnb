@@ -22,7 +22,7 @@ def create_user():
 
     entity: User = data_manager.create("User", **data)
     data['id'] = entity.id
-    save_data(data)
+    save_data(data, "Persistence/users.json")
     # Respond with the newly created user
     return jsonify({'id': entity.id}), 201  # HTTP status 201 for Created
 

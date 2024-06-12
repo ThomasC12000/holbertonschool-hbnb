@@ -3,8 +3,7 @@ from flask import jsonify
 from flask import request, abort
 from Persistence.data_manager import data_manager
 from Model.classes import Amenity
-import json
-import os
+from API.endpoints_methods import save_data, amenity_exists, load_data
 
 amenities = {}
 
@@ -22,6 +21,8 @@ def create_amenity():
 
     entity: Amenity = data_manager.create("Amenity", **data)
     data['id'] = entity.id
-    save_data(data)
+    save_data(data, "Persistence/amenities.json")
     # Respond with the newly created amenity
     return jsonify({'id': entity.id}), 201
+
+app.run()

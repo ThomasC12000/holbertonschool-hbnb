@@ -3,9 +3,9 @@ import os
 import json
 
 
-def save_data(data):
+def save_data(data, filename=None):
     '''Saves the data to the file'''
-    file_path = "Persistence/users.json"
+    file_path = filename
 
     # Read existing data if the file exists
     if os.path.exists(file_path):
@@ -47,3 +47,18 @@ def load_data(filename=None):
             return json.load(f)
     except:
         return {}
+
+def amenity_exists(name):
+    '''Checks if the amenity already exists in the file'''
+    file_path = "Persistence/amenities.json"
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            try:
+                existing_amenities = json.load(f)
+            except json.JSONDecodeError:
+                existing_amenities = []
+
+        for amenity in existing_amenities:
+            if amenity.get("name") == name:
+                return True
+    return False

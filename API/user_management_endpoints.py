@@ -51,8 +51,8 @@ def update_user(user_id):
             user["first_name"] = data["first_name"]
             user["last_name"] = data["last_name"]
             save_data(all_users)
-            return user
-    return None
+            return jsonify(user)
+    abort(404, description="User not found")
 
 @app.route("/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):

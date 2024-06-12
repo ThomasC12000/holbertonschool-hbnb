@@ -1,29 +1,59 @@
-from flask import Flask
-from flask import jsonify
-from flask import request, abort
-from Persistence.data_manager import data_manager
+from flask import request, jsonify, abort
+from API.endpoints_methods import save_data, load_data, app
 from Model.classes import Place
-from API.endpoints_methods import save_data, load_data, email_exists, app
+from Persistence.data_manager import data_manager
+import json
 
 places = {}
 
 @app.route("/places", methods=["POST"])
 def create_place():
     data = request.get_json()
-    if not data or "name" not in data or "city_id" not in data or "user_id" not in data:
-        abort(400, description="Missing required fields: name, city_id, user_id")
-    if not isinstance(data["name"], str) or not isinstance(data["city_id"], str) or\
-    not isinstance(data["user_id"], str):
-        abort(400, description="Invalid input format")
-    if not data_manager.exists(data["city_id"], "City"):
-        abort(404, description="City not found")
-    if not data_manager.exists(data["user_id"], "User"):
-        abort(404, description="User not found")
-
-    entity = data_manager.create("Place", **data)
+    if not data or "name" not in data or "location" not in data:
+        abort(400, description="Missing required fields: name, location")
+    entity: Place = data_manager.create("Place", **data)
     data['id'] = entity.id
-    save_data(data)
+    save_data(data, "Persistence/places.json")
     # Respond with the newly created place
+    return jsonify({'id': entity.id}), 201
+
+@app.route("/places", methods=["GET"])
+def get_places():
+    all_places = data_manager.get_by_class("Place")
+    if all_places is None:
+        abort(404, description="No places found")
+    return jsonify(load_data("Persistence/places.json"))
+
+@app.route("/places/<place_id>", methods=["GET"])
+def get_place_by_id(place_id):
+    all_places = load_data("Persistence/places.json")
+    for place in all_places:
+        if place["id"] == place_id:
+            return place
+    return None
+
+@app.route("/places/<place_id>", methods=["PUT"])
+def update_place(place_id):
+    all_places = load_data("Persistence/places.json")
+    for place in all_places:
+        if place["id"] == place_id:
+            data = request.get_json()
+            place["name"] = data["name"]
+            place["location"] = data["location"]
+            with open("Persistence/places.json", 'w') as f:
+                json.dump(all_places, f)
+            return jsonify(place)
+    abort(404, description="Place not found")
     
-    return jsonify({'id': entity.id}), 201  # HTTP status 201 for Created
+@app.route("/places/<place_id>", methods=["DELETE"])
+def delete_place(place_id):
+    all_places = load_data("Persistence/places.json")
+    for place in all_places:
+        if place["id"] == place_id:
+            all_places.remove(place)
+            with open("Persistence/places.json", 'w') as f:
+                json.dump(all_places, f)
+            return jsonify(place)
+    abort(404, description="Place not found")
+
 

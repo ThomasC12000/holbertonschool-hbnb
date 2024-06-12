@@ -1,6 +1,4 @@
-from flask import Flask
-from flask import jsonify
-from flask import request, abort
+from flask import request, jsonify, abort
 from Persistence.data_manager import data_manager
 from Model.classes import User
 from API.endpoints_methods import save_data, email_exists, load_data, app

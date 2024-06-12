@@ -50,7 +50,8 @@ def update_user(user_id):
             user["email"] = data["email"]
             user["first_name"] = data["first_name"]
             user["last_name"] = data["last_name"]
-            save_data(all_users)
+            with open("Persistence/users.json", 'w') as f:
+                json.dump(all_users, f)
             return jsonify(user)
     abort(404, description="User not found")
 

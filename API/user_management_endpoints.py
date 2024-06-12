@@ -4,7 +4,7 @@ from flask import request, abort
 from Persistence.data_manager import data_manager
 from Model.classes import User
 from API.endpoints_methods import save_data, email_exists, load_data
-from typing import Dict
+import json
 
 users = {}
 
@@ -59,51 +59,10 @@ def delete_user(user_id):
     all_users = load_data("Persistence/users.json")
     for user in all_users:
         if user["id"] == user_id:
-            all_users.popitem(user)
-            save_data(all_users)
-            return user
+            all_users.remove(user)
+            with open("Persistence/users.json", 'w') as f:
+                json.dump(all_users, f)
+            return jsonify(user)
     return None
-
-# def save_data(data):
-#     file_path = "Persistence/users.json"
-
-#     # Read existing data if the file exists
-#     if os.path.exists(file_path):
-#         with open(file_path, 'r') as f:
-#             try:
-#                 existing_data = json.load(f)
-#             except json.JSONDecodeError:
-#                 existing_data = []
-#     else:
-#         existing_data = []
-
-#     # Add the new data to the existing data
-#     if existing_data != data:
-#         existing_data.append(data)
-
-#     # Write the updated data to the file
-#     with open(file_path, 'w') as f:
-#         json.dump(existing_data, f)
-
-# def email_exists(email):
-#     file_path = "Persistence/users.json"
-#     if os.path.exists(file_path):
-#         with open(file_path, 'r') as f:
-#             try:
-#                 existing_users = json.load(f)
-#             except json.JSONDecodeError:
-#                 existing_users = []
-
-#         for user in existing_users:
-#             if user.get("email") == email:
-#                 return True
-#     return False
-
-# def load_data(filename=None):
-#     try:
-#         with open(filename, 'r') as f:
-#             return json.load(f)
-#     except:
-#         return {}
 
 app.run()

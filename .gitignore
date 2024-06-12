@@ -11,3 +11,4 @@ __pycache__
     - .coveragerc
 
 *.json
+__pycache__

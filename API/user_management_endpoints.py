@@ -3,8 +3,8 @@ from flask import jsonify
 from flask import request, abort
 from Persistence.data_manager import data_manager
 from Model.classes import User
+from API.endpoints_methods import save_data, email_exists, load_data
 import json
-import os
 
 users = {}
 
@@ -26,55 +26,11 @@ def create_user():
     # Respond with the newly created user
     return jsonify({'id': entity.id}), 201  # HTTP status 201 for Created
 
-def save_data(data):
-    file_path = "Persistence/users.json"
-
-    # Read existing data if the file exists
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as f:
-            try:
-                existing_data = json.load(f)
-            except json.JSONDecodeError:
-                existing_data = []
-    else:
-        existing_data = []
-
-    # Add the new data to the existing data
-    if existing_data != data:
-        existing_data.append(data)
-
-    # Write the updated data to the file
-    with open(file_path, 'w') as f:
-        json.dump(existing_data, f)
-
-def email_exists(email):
-    file_path = "Persistence/users.json"
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as f:
-            try:
-                existing_users = json.load(f)
-            except json.JSONDecodeError:
-                existing_users = []
-        
-        for user in existing_users:
-            if user.get("email") == email:
-                return True
-    return False
-
-def load_data(filename=None):
-    try:
-        with open(filename, 'r') as f:
-            return json.load(f)
-    except:
-        print("je suis dans l'except")
-        return {}
-
 @app.route("/users", methods=["GET"])
 def get_users():
     all_users = data_manager.get_by_class("User")
     if all_users is None:
         abort(404, description="No users found")
-
     return jsonify(load_data("Persistence/users.json"))
 
 @app.route("/users/<user_id>", methods=["GET"])
@@ -95,8 +51,8 @@ def update_user(user_id):
             user["first_name"] = data["first_name"]
             user["last_name"] = data["last_name"]
             save_data(all_users)
-            return user
-    return None
+            return jsonify(user)
+    abort(404, description="User not found")
 
 @app.route("/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):

@@ -3,9 +3,9 @@ import os
 import json
 
 
-def save_data(data):
+def save_data(data, filename=None):
     '''Saves the data to the file'''
-    file_path = "Persistence/users.json"
+    file_path = filename
 
     # Read existing data if the file exists
     if os.path.exists(file_path):

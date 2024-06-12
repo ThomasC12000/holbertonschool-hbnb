@@ -28,8 +28,8 @@ def create_user():
 
 def save_data(data):
     file_path = "Persistence/users.json"
-    
-    # Lire les données existantes si le fichier existe
+
+    # Read existing data if the file exists
     if os.path.exists(file_path):
         with open(file_path, 'r') as f:
             try:
@@ -38,11 +38,12 @@ def save_data(data):
                 existing_data = []
     else:
         existing_data = []
-    
-    # Ajouter les nouvelles données aux données existantes
+
+    # Add the new data to the existing data
     existing_data.append(data)
-    
-    # Écrire les données mises à jour dans le fichier
+    existing_data.append(data)
+
+    # Write the updated data to the file
     with open(file_path, 'w') as f:
         json.dump(existing_data, f)
 
@@ -68,6 +69,14 @@ def load_data(filename=None):
         print("je suis dans l'except")
         return {}
 
+@app.route("/users/<user_id>", methods=["GET"])
+def get_user_by_id(user_id):
+    all_users = load_data("Persistence/users.json")
+    for user in all_users:
+        if user["id"] == user_id:
+            return user
+    return None
+
 @app.route("/users", methods=["GET"])
 def get_users():
     all_users = data_manager.get_by_class("User")
@@ -76,13 +85,5 @@ def get_users():
 
     return jsonify(load_data("Persistence/users.json"))
 
-@app.route("/users/<user_id>", methods=["GET"])
-def get_user_by_id(user_id):
-    user_id = request.view_args.get("user_id")
-    user = data_manager.get_by_id("User", user_id)
-    if user is None:
-        abort(404, description="No user found with this id")
-    return jsonify(user)
-    
 
 app.run()

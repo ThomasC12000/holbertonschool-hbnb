@@ -9,3 +9,5 @@ __pycache__
     - .travis.yml
     - .gitignore
     - .coveragerc
+
+*.json

@@ -38,8 +38,8 @@ def save_data(data):
         existing_data = []
 
     # Add the new data to the existing data
-    existing_data.append(data)
-    existing_data.append(data)
+    if existing_data != data:
+        existing_data.append(data)
 
     # Write the updated data to the file
     with open(file_path, 'w') as f:
@@ -53,14 +53,6 @@ def load_data(filename=None):
         print("je suis dans l'except")
         return {}
 
-@app.route("/users/<user_id>", methods=["GET"])
-def get_user_by_id(user_id):
-    all_users = load_data("Persistence/users.json")
-    for user in all_users:
-        if user["id"] == user_id:
-            return user
-    return None
-
 @app.route("/users", methods=["GET"])
 def get_users():
     all_users = data_manager.get_by_class("User")
@@ -69,5 +61,35 @@ def get_users():
 
     return jsonify(load_data("Persistence/users.json"))
 
+@app.route("/users/<user_id>", methods=["GET"])
+def get_user_by_id(user_id):
+    all_users = load_data("Persistence/users.json")
+    for user in all_users:
+        if user["id"] == user_id:
+            return user
+    return None
+
+@app.route("/users/<user_id>", methods=["PUT"])
+def update_user(user_id):
+    all_users = load_data("Persistence/users.json")
+    for user in all_users:
+        if user["id"] == user_id:
+            data = request.get_json()
+            user["email"] = data["email"]
+            user["first_name"] = data["first_name"]
+            user["last_name"] = data["last_name"]
+            save_data(all_users)
+            return user
+    return None
+
+@app.route("/users/<user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    all_users = load_data("Persistence/users.json")
+    for user in all_users:
+        if user["id"] == user_id:
+            all_users.remove(user)
+            save_data(all_users)
+            return user
+    return None
 
 app.run()

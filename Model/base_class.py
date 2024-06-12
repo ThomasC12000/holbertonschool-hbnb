@@ -10,6 +10,11 @@ class BaseClass:
         self.created_at = created_at or datetime.now().isoformat()
         self.updated_at = updated_at or datetime.now().isoformat()
 
+
+    def to_dict(self):
+        """Return a dictionary representation of the instance."""
+        return self.__dict__
+
     def save(self):
         """Save the current instance to a file."""
         data = self.__dict__
@@ -33,9 +38,6 @@ class BaseClass:
             setattr(self, key, value)
         self.updated_at = datetime.now().isoformat()
         self.save()
-
-    def to_dict(self):
-        pass
 
     @classmethod
     def get_by_id(cls, id):
@@ -65,7 +67,3 @@ class BaseClass:
         filename = f"{cls.__name__.lower()}.json"
         with open(filename, 'w') as f:
             json.dump(data, f, indent=4)
-
-    def to_dict(self):
-        """Return a dictionary representation of the instance."""
-        return self.__dict__

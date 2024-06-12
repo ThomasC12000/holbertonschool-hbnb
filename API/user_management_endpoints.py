@@ -104,8 +104,9 @@ def delete_user(user_id):
     for user in all_users:
         if user["id"] == user_id:
             all_users.remove(user)
-            save_data(all_users)
-            return user
+            with open("Persistence/users.json", 'w') as f:
+                json.dump(all_users, f)
+            return jsonify(user)
     return None
 
 app.run()

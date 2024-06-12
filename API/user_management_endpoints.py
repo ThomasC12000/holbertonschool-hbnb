@@ -85,16 +85,27 @@ def get_user_by_id(user_id):
             return user
     return None
 
+@app.route("/users/<user_id>", methods=["PUT"])
+def update_user(user_id):
+    all_users = load_data("Persistence/users.json")
+    for user in all_users:
+        if user["id"] == user_id:
+            data = request.get_json()
+            user["email"] = data["email"]
+            user["first_name"] = data["first_name"]
+            user["last_name"] = data["last_name"]
+            save_data(all_users)
+            return user
+    return None
+
 @app.route("/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     all_users = load_data("Persistence/users.json")
     for user in all_users:
         if user["id"] == user_id:
             all_users.remove(user)
-            with open("Persistence/users.json", 'w') as f:
-                json.dump(all_users, f)
-            return jsonify(user)
+            save_data(all_users)
+            return user
     return None
-
 
 app.run()

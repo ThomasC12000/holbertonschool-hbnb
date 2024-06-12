@@ -1,14 +1,10 @@
-from flask import Flask
-from flask import jsonify
-from flask import request, abort
+from flask import request, jsonify, abort
 from Persistence.data_manager import data_manager
 from Model.classes import User
-from API.endpoints_methods import save_data, email_exists, load_data
+from API.endpoints_methods import save_data, email_exists, load_data, app
 import json
 
 users = {}
-
-app = Flask(__name__)
 
 @app.route("/users", methods=["POST"])
 def create_user():
@@ -65,5 +61,3 @@ def delete_user(user_id):
                 json.dump(all_users, f)
             return jsonify(user)
     return None
-
-app.run()

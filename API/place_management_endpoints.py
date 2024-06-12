@@ -1,81 +1,59 @@
-from flask import Flask, request, jsonify, abort
-from API.endpoints_methods import save_data, load_data
+from flask import request, jsonify, abort
+from API.endpoints_methods import save_data, load_data, app
+from Model.classes import Place
+from Persistence.data_manager import data_manager
+import json
 
+places = {}
 
-app = Flask(__name__)
+@app.route("/places", methods=["POST"])
+def create_place():
+    data = request.get_json()
+    if not data or "name" not in data or "location" not in data:
+        abort(400, description="Missing required fields: name, location")
+    entity: Place = data_manager.create("Place", **data)
+    data['id'] = entity.id
+    save_data(data, "Persistence/places.json")
+    # Respond with the newly created place
+    return jsonify({'id': entity.id}), 201
 
-# Mock data
-countries = {"US": "United States", "CA": "Canada", "FR": "France"}
-cities = {
-    1: {"name": "New York", "country_code": "US"},
-    2: {"name": "Los Angeles", "country_code": "US"},
-    3: {"name": "Toronto", "country_code": "CA"},
-}
+@app.route("/places", methods=["GET"])
+def get_places():
+    all_places = data_manager.get_by_class("Place")
+    if all_places is None:
+        abort(404, description="No places found")
+    return jsonify(load_data("Persistence/places.json"))
 
-# Function to get the next city ID
-def get_next_city_id():
-    return max(cities.keys()) + 1 if cities else 1
+@app.route("/places/<place_id>", methods=["GET"])
+def get_place_by_id(place_id):
+    all_places = load_data("Persistence/places.json")
+    for place in all_places:
+        if place["id"] == place_id:
+            return place
+    return None
 
-@app.route("/countries/<country_code>/cities", methods=["GET"])
-def get_cities_by_country(country_code):
-    country_code = country_code.upper()
-    if country_code not in countries:
-        abort(404, description="Country code not found")
+@app.route("/places/<place_id>", methods=["PUT"])
+def update_place(place_id):
+    all_places = load_data("Persistence/places.json")
+    for place in all_places:
+        if place["id"] == place_id:
+            data = request.get_json()
+            place["name"] = data["name"]
+            place["location"] = data["location"]
+            with open("Persistence/places.json", 'w') as f:
+                json.dump(all_places, f)
+            return jsonify(place)
+    abort(404, description="Place not found")
     
-    result = [city for city in cities.values() if city["country_code"] == country_code]
-    return jsonify({"country_code": country_code, "cities": result})
+@app.route("/places/<place_id>", methods=["DELETE"])
+def delete_place(place_id):
+    all_places = load_data("Persistence/places.json")
+    for place in all_places:
+        if place["id"] == place_id:
+            all_places.remove(place)
+            with open("Persistence/places.json", 'w') as f:
+                json.dump(all_places, f)
+            return jsonify(place)
+    abort(404, description="Place not found")
 
-@app.route("/cities", methods=["POST"])
-def create_city():
-    if not request.is_json:
-        abort(400, description="Request must be JSON")
 
-    data = request.get_json()
-    name = data.get("name")
-    country_code = data.get("country_code")
-
-    if not name or not country_code:
-        abort(400, description="Missing required fields: name and country_code")
-
-    if country_code.upper() not in countries:
-        abort(400, description="Invalid country code")
-
-    city_id = get_next_city_id()
-    cities[city_id] = {
-        "name": name,
-        "country_code": country_code.upper()
-    }
-
-    return jsonify({"id": city_id, "name": name, "country_code": country_code.upper()}), 201
-
-@app.route("/cities/<int:city_id>", methods=["GET"])
-def get_city_by_id(city_id):
-    city = cities.get(city_id)
-    if not city:
-        abort(404, description="City not found")
-
-    return jsonify(city)
-
-@app.route("/cities/<int:city_id>", methods=["PUT"])
-def update_city(city_id):
-    if not request.is_json:
-        abort(400, description="Request must be JSON")
-
-    data = request.get_json()
-    name = data.get("name")
-    country_code = data.get("country_code")
-
-    if not name or not country_code:
-        abort(400, description="Missing required fields: name and country_code")
-
-    if country_code.upper() not in countries:
-        abort(400, description="Invalid country code")
-
-    city = cities.get(city_id)
-    if not city:
-        abort(404, description="City not found")
-
-    city["name"] = name
-    city["country_code"] = country_code.upper()
-
-    return jsonify(city)

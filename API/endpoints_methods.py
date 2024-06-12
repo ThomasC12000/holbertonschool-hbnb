@@ -1,7 +1,9 @@
 #Module containing the different methods used in the endpoints
 import os
 import json
+from flask import Flask
 
+app = Flask(__name__)
 
 def save_data(data, filename=None):
     '''Saves the data to the file'''

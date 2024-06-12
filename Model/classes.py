@@ -14,15 +14,16 @@ class User(BaseClass):
         self.last_name = last_name
 
 class Place(BaseClass):
-    def __init__(self, name, description, address, city_id, host_id, **kwargs):
+    def __init__(self, name='', location='', description='', address='', city_id='', host_id='', **kwargs):
         super().__init__(**kwargs)
         self.name = name
         self.description = description
         self.address = address
         self.city_id = city_id
         self.host_id = host_id
+        self.location = location
 
-class Review(BaseClass):
+class Review(Place, User):
     def __init__(self, user_id, place_id, rating, comment, **kwargs):
         super().__init__(**kwargs)
         self.user_id = user_id

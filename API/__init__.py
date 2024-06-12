@@ -1,1 +1,3 @@
+import API.place_management_endpoints
+import API.country_and_city_endpoints
 from API.user_management_endpoints import app

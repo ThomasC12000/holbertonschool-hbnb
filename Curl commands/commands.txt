@@ -32,8 +32,7 @@ curl -X PUT -H "Content-Type: application/json" -d '{"email": "feeder@gmail.com"
 CREATE A PLACE
 --------------
 
-curl -X POST -H "Content-Type: application/json" -d '{"name":"myplace", "location":"dtc"}'
-http://127.0.0.1:5000/places
+curl -X POST -H "Content-Type: application/json" -d '{"name":"myplace", "location":"dtc"}' http://127.0.0.1:5000/places
 
 GET A PLACE BY ID
 -----------------

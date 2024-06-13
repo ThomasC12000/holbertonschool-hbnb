@@ -10,18 +10,25 @@ reviews = {}
 @app.route("/places/<place_id>/reviews", methods=["POST"])
 def create_review(place_id):
     data = request.get_json()
+    print("test")
     if not data or "user_id" not in data or "text" not in data:
+        print("missing fields")
         abort(400, description="Missing required fields: user_id, text")
     if not isinstance(data["user_id"], str) or not isinstance(data["text"], str):
+        print("invalid format")
         abort(400, description="Invalid input format")
     if not data_manager.exists(data["user_id"], "User"):
+        print("user not found")
         abort(404, description="User not found")
     if not data_manager.exists(place_id, "Place"):
+        print("404")
         abort(404, description="Place not found")
-
     entity = data_manager.create("Review", **data)
+    print("2")
     data['id'] = entity.id
+    print("3")
     save_data(data, "Persistence/reviews.json")
+    print("4")
     # Respond with the newly created review
     return jsonify({'id': entity.id}), 201
 

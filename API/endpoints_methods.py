@@ -64,3 +64,4 @@ def amenity_exists(name):
             if amenity.get("name") == name:
                 return True
     return False
+

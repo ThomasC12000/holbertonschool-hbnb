@@ -18,19 +18,19 @@ class BaseClass:
     def save(self):
         """Save the current instance to a file."""
         data = self.__dict__
-        all_data = self._load_all()
+        all_data = self.load_all()
         existing = next((item for item in all_data if item['id'] == self.id), None)
         if existing:
             all_data = [item if item['id'] != self.id else data for item in all_data]
         else:
             all_data.append(data)
-        self._save_all(all_data)
+        self.save_all(all_data)
 
     def delete(self):
         """Delete the current instance from the file."""
-        all_data = self._load_all()
+        all_data = self.load_all()
         all_data = [item for item in all_data if item['id'] != id]
-        self._save_all(all_data)
+        self.save_all(all_data)
 
     def update(self, **kwargs):
         """Update the attributes of the current instance."""
@@ -42,14 +42,14 @@ class BaseClass:
     @classmethod
     def get_by_id(cls, id):
         """Get an instance by its ID."""
-        all_data = cls._load_all()
+        all_data = cls.load_all()
         data = next((item for item in all_data if item['id'] == id), None)
         return cls(**data) if data else None
 
     @classmethod
     def get_all(cls):
         """Get all instances of the model."""
-        all_data = cls._load_all()
+        all_data = cls.load_all()
         return [cls(**item) for item in all_data]
 
     @classmethod

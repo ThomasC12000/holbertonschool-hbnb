@@ -24,8 +24,9 @@ class Place(BaseClass):
         self.location = location
 
 class Review(Place, User):
-    def __init__(self, user_id, place_id, rating, comment, **kwargs):
+    def __init__(self, user_id, id, place_id='', rating='', comment='', **kwargs):
         super().__init__(**kwargs)
+        self.id = id
         self.user_id = user_id
         self.place_id = place_id
         self.rating = rating
@@ -37,12 +38,14 @@ class Amenity(BaseClass):
         self.name = name
 
 class City(BaseClass):
-    def __init__(self, name, country_id, **kwargs):
+    def __init__(self, name, id, country, **kwargs):
         super().__init__(**kwargs)
         self.name = name
-        self.country_id = country_id
+        self.id = id
+        self.country = country
 
 class Country(BaseClass):
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, country_code, **kwargs):
         super().__init__(**kwargs)
         self.name = name
+        self.country_code = country_code

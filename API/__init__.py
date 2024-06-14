@@ -1,0 +1,6 @@
+import API.place_management_endpoints
+import API.country_and_city_endpoints
+import API.review_management_endpoints
+import API.user_management_endpoints
+import API.amenity_management_endpoints
+from API.user_management_endpoints import app

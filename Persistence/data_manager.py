@@ -67,3 +67,4 @@ class DataManager(IPersistenceManager):
             del self.data[entity_type][entity_id]
 
 data_manager = DataManager()
+
